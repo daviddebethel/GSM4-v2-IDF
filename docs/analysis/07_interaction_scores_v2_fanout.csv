@@ -1,0 +1,172 @@
+file_i,file_j,total_score,score_state,score_context,score_calls,top_evidence
+src/audio/Audio.cpp,src/audio/mp3_decoder/mp3_decoder.cpp,8,0,0,8,calls:4 dir:A→B
+src/audio/Audio.cpp,src/main.cpp,0,0,0,0,
+src/audio/Audio.cpp,src/src/adc_handler.cpp,0,0,0,0,
+src/audio/Audio.cpp,src/src/audio_handler.cpp,106,0,0,106,calls:53 dir:A→B
+src/audio/Audio.cpp,src/src/button_handler.cpp,0,0,0,0,
+src/audio/Audio.cpp,src/src/common.cpp,0,0,0,0,
+src/audio/Audio.cpp,src/src/dtmf_handler.cpp,0,0,0,0,
+src/audio/Audio.cpp,src/src/file_handler.cpp,0,0,0,0,
+src/audio/Audio.cpp,src/src/gpio_handler.cpp,0,0,0,0,
+src/audio/Audio.cpp,src/src/imu_handler.cpp,0,0,0,0,
+src/audio/Audio.cpp,src/src/leddisplay_handler.cpp,0,0,0,0,
+src/audio/Audio.cpp,src/src/modem_handler.cpp,0,0,0,0,
+src/audio/Audio.cpp,src/src/power_handler.cpp,0,0,0,0,
+src/audio/Audio.cpp,src/src/serial_transport.cpp,0,0,0,0,
+src/audio/Audio.cpp,src/src/test_handler.cpp,0,0,0,0,
+src/audio/Audio.cpp,src/src/tft_handler.cpp,0,0,0,0,
+src/audio/Audio.cpp,src/src/tick.cpp,0,0,0,0,
+src/audio/Audio.cpp,src/src/wifi_handler.cpp,0,0,0,0,
+src/audio/mp3_decoder/mp3_decoder.cpp,src/main.cpp,0,0,0,0,
+src/audio/mp3_decoder/mp3_decoder.cpp,src/src/adc_handler.cpp,0,0,0,0,
+src/audio/mp3_decoder/mp3_decoder.cpp,src/src/audio_handler.cpp,0,0,0,0,
+src/audio/mp3_decoder/mp3_decoder.cpp,src/src/button_handler.cpp,0,0,0,0,
+src/audio/mp3_decoder/mp3_decoder.cpp,src/src/common.cpp,0,0,0,0,
+src/audio/mp3_decoder/mp3_decoder.cpp,src/src/dtmf_handler.cpp,0,0,0,0,
+src/audio/mp3_decoder/mp3_decoder.cpp,src/src/file_handler.cpp,0,0,0,0,
+src/audio/mp3_decoder/mp3_decoder.cpp,src/src/gpio_handler.cpp,0,0,0,0,
+src/audio/mp3_decoder/mp3_decoder.cpp,src/src/imu_handler.cpp,0,0,0,0,
+src/audio/mp3_decoder/mp3_decoder.cpp,src/src/leddisplay_handler.cpp,0,0,0,0,
+src/audio/mp3_decoder/mp3_decoder.cpp,src/src/modem_handler.cpp,0,0,0,0,
+src/audio/mp3_decoder/mp3_decoder.cpp,src/src/power_handler.cpp,0,0,0,0,
+src/audio/mp3_decoder/mp3_decoder.cpp,src/src/serial_transport.cpp,0,0,0,0,
+src/audio/mp3_decoder/mp3_decoder.cpp,src/src/test_handler.cpp,0,0,0,0,
+src/audio/mp3_decoder/mp3_decoder.cpp,src/src/tft_handler.cpp,0,0,0,0,
+src/audio/mp3_decoder/mp3_decoder.cpp,src/src/tick.cpp,0,0,0,0,
+src/audio/mp3_decoder/mp3_decoder.cpp,src/src/wifi_handler.cpp,0,0,0,0,
+src/main.cpp,src/src/adc_handler.cpp,5,0,1,4,ctx:loop; calls:2 dir:A→B
+src/main.cpp,src/src/audio_handler.cpp,274.9519284,19.9519284,0,255,"state:generalFlags.audio_test_abort_request(k=2,m=0.63); state:generalFlags.audio_test_request(k=2,m=0.63); state:statusReg.flags.audio_digit_playing(k=2,m=0.63); calls:85 dir:bidirectional"
+src/main.cpp,src/src/button_handler.cpp,9.773705614,2.773705614,1,6,"state:generalFlags.wifi_request(k=3,m=0.50); state:statusReg.flags.modem_registered(k=5,m=0.39); ctx:loop; calls:3 dir:A→B"
+src/main.cpp,src/src/common.cpp,0,0,0,0,
+src/main.cpp,src/src/dtmf_handler.cpp,20.11856827,15.11856827,1,4,"state:generalFlags.load_activate_request(k=2,m=0.63); state:gpio_controls.load_control(k=2,m=0.63); state:statusReg.flags.call_connected(k=2,m=0.63); ctx:loop; calls:2 dir:A→B"
+src/main.cpp,src/src/file_handler.cpp,90.89099262,79.89099262,1,10,"state:configReg.audo_path_test_period(k=3,m=0.50); state:configReg.call_disable_low_signal_level(k=3,m=0.50); state:configReg.flags.external_power_disable_enabled(k=3,m=0.50); ctx:loop; calls:5 dir:A→B"
+src/main.cpp,src/src/gpio_handler.cpp,160.010368,67.01036804,1,92,"state:statusReg.flags.door_stuck(k=2,m=0.63); state:statusReg.flags.doorstuck_logtext_done(k=2,m=0.63); state:statusReg.flags.handset_loop_open(k=2,m=0.63); ctx:loop; calls:46 dir:A→B"
+src/main.cpp,src/src/imu_handler.cpp,15.09487606,10.09487606,1,4,"state:statusReg.flags.imu_tilt_exceeded(k=2,m=0.63); state:statusReg.flags.imu_tilt_logtext_done(k=2,m=0.63); state:statusReg.flags.imu_tilt_reset(k=2,m=0.63); ctx:loop; calls:2 dir:A→B"
+src/main.cpp,src/src/leddisplay_handler.cpp,25.01583009,14.01583009,1,10,"state:statusReg.flags.incoming_call_ringing(k=2,m=0.63); state:statusReg.flags.off_hook_active(k=2,m=0.63); state:generalFlags.force_led_update(k=3,m=0.50); ctx:loop; calls:5 dir:A→B"
+src/main.cpp,src/src/modem_handler.cpp,248.5011419,233.5011419,1,14,"state:generalFlags.audio_test_cleanup_request(k=2,m=0.63); state:generalFlags.call_answer_request(k=2,m=0.63); state:generalFlags.call_audio_request(k=2,m=0.63); ctx:loop; calls:7 dir:A→B"
+src/main.cpp,src/src/power_handler.cpp,24.04743803,5.047438029,1,18,"state:generalFlags.power_status_request(k=2,m=0.63); state:gpio_controls.charge_enable(k=2,m=0.63); ctx:loop; calls:9 dir:A→B"
+src/main.cpp,src/src/serial_transport.cpp,0,0,0,0,
+src/main.cpp,src/src/test_handler.cpp,2,0,0,2,calls:1 dir:A→B
+src/main.cpp,src/src/tft_handler.cpp,35.52371901,2.523719014,1,32,"state:statusReg.flags.tft_status(k=2,m=0.63); ctx:loop; calls:16 dir:A→B"
+src/main.cpp,src/src/tick.cpp,168,0,0,168,calls:84 dir:A→B
+src/main.cpp,src/src/wifi_handler.cpp,123.6410583,118.6410583,1,4,"state:configReg.flags.audio_path_test_enable(k=2,m=0.63); state:configReg.flags.no_network_response_enabled(k=2,m=0.63); state:statusReg.call_status(k=2,m=0.63); ctx:loop; calls:2 dir:A→B"
+src/src/adc_handler.cpp,src/src/audio_handler.cpp,0,0,0,0,
+src/src/adc_handler.cpp,src/src/button_handler.cpp,1,0,1,0,ctx:loop
+src/src/adc_handler.cpp,src/src/common.cpp,0,0,0,0,
+src/src/adc_handler.cpp,src/src/dtmf_handler.cpp,1,0,1,0,ctx:loop
+src/src/adc_handler.cpp,src/src/file_handler.cpp,1,0,1,0,ctx:loop
+src/src/adc_handler.cpp,src/src/gpio_handler.cpp,1,0,1,0,ctx:loop
+src/src/adc_handler.cpp,src/src/imu_handler.cpp,1,0,1,0,ctx:loop
+src/src/adc_handler.cpp,src/src/leddisplay_handler.cpp,1,0,1,0,ctx:loop
+src/src/adc_handler.cpp,src/src/modem_handler.cpp,3,2,1,0,"state:statusReg.external_voltage(k=3,m=0.50); ctx:loop"
+src/src/adc_handler.cpp,src/src/power_handler.cpp,3.523719014,2.523719014,1,0,"state:generalFlags.external_voltage_request(k=2,m=0.63); ctx:loop"
+src/src/adc_handler.cpp,src/src/serial_transport.cpp,0,0,0,0,
+src/src/adc_handler.cpp,src/src/test_handler.cpp,0,0,0,0,
+src/src/adc_handler.cpp,src/src/tft_handler.cpp,1,0,1,0,ctx:loop
+src/src/adc_handler.cpp,src/src/tick.cpp,0,0,0,0,
+src/src/adc_handler.cpp,src/src/wifi_handler.cpp,3,2,1,0,"state:statusReg.external_voltage(k=3,m=0.50); ctx:loop"
+src/src/audio_handler.cpp,src/src/button_handler.cpp,0,0,0,0,
+src/src/audio_handler.cpp,src/src/common.cpp,0,0,0,0,
+src/src/audio_handler.cpp,src/src/dtmf_handler.cpp,20,0,0,20,calls:10 dir:B→A
+src/src/audio_handler.cpp,src/src/file_handler.cpp,1.333333333,1.333333333,0,0,"state:configReg.telephone_operating_mode(k=7,m=0.33)"
+src/src/audio_handler.cpp,src/src/gpio_handler.cpp,1.333333333,1.333333333,0,0,"state:configReg.telephone_operating_mode(k=7,m=0.33)"
+src/src/audio_handler.cpp,src/src/imu_handler.cpp,0,0,0,0,
+src/src/audio_handler.cpp,src/src/leddisplay_handler.cpp,1.333333333,1.333333333,0,0,"state:configReg.telephone_operating_mode(k=7,m=0.33)"
+src/src/audio_handler.cpp,src/src/modem_handler.cpp,7.333333333,7.333333333,0,0,"state:generalFlags.audio_test_tone_start_request(k=3,m=0.50); state:statusReg.audio_test_tone_tick(k=3,m=0.50); state:statusReg.flags.audio_test_tone_active(k=3,m=0.50)"
+src/src/audio_handler.cpp,src/src/power_handler.cpp,0,0,0,0,
+src/src/audio_handler.cpp,src/src/serial_transport.cpp,0,0,0,0,
+src/src/audio_handler.cpp,src/src/test_handler.cpp,24,0,0,24,calls:12 dir:B→A
+src/src/audio_handler.cpp,src/src/tft_handler.cpp,0,0,0,0,
+src/src/audio_handler.cpp,src/src/tick.cpp,18,0,0,18,calls:9 dir:A→B
+src/src/audio_handler.cpp,src/src/wifi_handler.cpp,1.333333333,1.333333333,0,0,"state:configReg.telephone_operating_mode(k=7,m=0.33)"
+src/src/button_handler.cpp,src/src/common.cpp,0,0,0,0,
+src/src/button_handler.cpp,src/src/dtmf_handler.cpp,1,0,1,0,ctx:loop
+src/src/button_handler.cpp,src/src/file_handler.cpp,5,0,1,4,ctx:loop; calls:2 dir:A→B
+src/src/button_handler.cpp,src/src/gpio_handler.cpp,1,0,1,0,ctx:loop
+src/src/button_handler.cpp,src/src/imu_handler.cpp,1,0,1,0,ctx:loop
+src/src/button_handler.cpp,src/src/leddisplay_handler.cpp,2.635058731,1.635058731,1,0,"state:statusReg.flags.modem_first_registration(k=4,m=0.43); state:statusReg.flags.modem_registered(k=5,m=0.39); ctx:loop"
+src/src/button_handler.cpp,src/src/modem_handler.cpp,8.270117461,7.270117461,1,0,"state:generalFlags.modem_reboot_request(k=3,m=0.50); state:generalFlags.wifi_request(k=3,m=0.50); state:statusReg.flags.modem_first_registration(k=4,m=0.43); ctx:loop"
+src/src/button_handler.cpp,src/src/power_handler.cpp,1,0,1,0,ctx:loop
+src/src/button_handler.cpp,src/src/serial_transport.cpp,0,0,0,0,
+src/src/button_handler.cpp,src/src/test_handler.cpp,0,0,0,0,
+src/src/button_handler.cpp,src/src/tft_handler.cpp,1,0,1,0,ctx:loop
+src/src/button_handler.cpp,src/src/tick.cpp,6,0,0,6,calls:3 dir:A→B
+src/src/button_handler.cpp,src/src/wifi_handler.cpp,6.270117461,5.270117461,1,0,"state:generalFlags.modem_reboot_request(k=3,m=0.50); state:statusReg.flags.modem_first_registration(k=4,m=0.43); state:statusReg.flags.modem_registered(k=5,m=0.39); ctx:loop"
+src/src/common.cpp,src/src/dtmf_handler.cpp,0,0,0,0,
+src/src/common.cpp,src/src/file_handler.cpp,2,0,0,2,calls:1 dir:B→A
+src/src/common.cpp,src/src/gpio_handler.cpp,0,0,0,0,
+src/src/common.cpp,src/src/imu_handler.cpp,0,0,0,0,
+src/src/common.cpp,src/src/leddisplay_handler.cpp,0,0,0,0,
+src/src/common.cpp,src/src/modem_handler.cpp,94,0,0,94,calls:47 dir:B→A
+src/src/common.cpp,src/src/power_handler.cpp,0,0,0,0,
+src/src/common.cpp,src/src/serial_transport.cpp,0,0,0,0,
+src/src/common.cpp,src/src/test_handler.cpp,0,0,0,0,
+src/src/common.cpp,src/src/tft_handler.cpp,0,0,0,0,
+src/src/common.cpp,src/src/tick.cpp,0,0,0,0,
+src/src/common.cpp,src/src/wifi_handler.cpp,2,0,0,2,calls:1 dir:B→A
+src/src/dtmf_handler.cpp,src/src/file_handler.cpp,5.81752869,4.81752869,1,0,"state:configReg.PIN(k=4,m=0.43); state:configReg.handset_PGA_speaker_gain(k=5,m=0.39); state:configReg.handsfree_PGA_speaker_gain(k=5,m=0.39); ctx:loop"
+src/src/dtmf_handler.cpp,src/src/gpio_handler.cpp,3,0,1,2,ctx:loop; calls:1 dir:A→B
+src/src/dtmf_handler.cpp,src/src/imu_handler.cpp,1,0,1,0,ctx:loop
+src/src/dtmf_handler.cpp,src/src/leddisplay_handler.cpp,1,0,1,0,ctx:loop
+src/src/dtmf_handler.cpp,src/src/modem_handler.cpp,11.81752869,10.81752869,1,0,"state:statusReg.modem_dtmf_digit(k=3,m=0.50); state:statusReg.modem_response(k=3,m=0.50); state:statusReg.telephone_mode(k=3,m=0.50); ctx:loop"
+src/src/dtmf_handler.cpp,src/src/power_handler.cpp,1,0,1,0,ctx:loop
+src/src/dtmf_handler.cpp,src/src/serial_transport.cpp,0,0,0,0,
+src/src/dtmf_handler.cpp,src/src/test_handler.cpp,0,0,0,0,
+src/src/dtmf_handler.cpp,src/src/tft_handler.cpp,1,0,1,0,ctx:loop
+src/src/dtmf_handler.cpp,src/src/tick.cpp,4,0,0,4,calls:2 dir:A→B
+src/src/dtmf_handler.cpp,src/src/wifi_handler.cpp,5.81752869,4.81752869,1,0,"state:configReg.PIN(k=4,m=0.43); state:configReg.handset_PGA_speaker_gain(k=5,m=0.39); state:configReg.handsfree_PGA_speaker_gain(k=5,m=0.39); ctx:loop"
+src/src/file_handler.cpp,src/src/gpio_handler.cpp,4.056039566,3.056039566,1,0,"state:configReg.flags.door_stuck_message_disable(k=4,m=0.43); state:configReg.telephone_operating_mode(k=7,m=0.33); ctx:loop"
+src/src/file_handler.cpp,src/src/imu_handler.cpp,4.722706232,3.722706232,1,0,"state:configReg.flags.imu_enabled(k=3,m=0.50); state:configReg.imu_tip_threshold(k=4,m=0.43); ctx:loop"
+src/src/file_handler.cpp,src/src/leddisplay_handler.cpp,5.778745798,4.778745798,1,0,"state:configReg.flags.led_board_status_enabled(k=4,m=0.43); state:configReg.status_led_brightness(k=4,m=0.43); state:configReg.telephone_operating_mode(k=7,m=0.33); ctx:loop"
+src/src/file_handler.cpp,src/src/modem_handler.cpp,140.5045238,134.5045238,4,2,"state:configReg.UIN.byte(k=3,m=0.50); state:configReg.flags.location_text_setup(k=3,m=0.50); state:configReg.ftp_directory(k=3,m=0.50); ctx:task: modem; ctx:loop; calls:1 dir:B→A"
+src/src/file_handler.cpp,src/src/power_handler.cpp,6.445412465,5.445412465,1,0,"state:configReg.flags.charger_temperature_enable(k=3,m=0.50); state:configReg.battery_chargerate(k=4,m=0.43); state:configReg.battery_low_level(k=4,m=0.43); ctx:loop"
+src/src/file_handler.cpp,src/src/serial_transport.cpp,0,0,0,0,
+src/src/file_handler.cpp,src/src/test_handler.cpp,0,0,0,0,
+src/src/file_handler.cpp,src/src/tft_handler.cpp,1,0,1,0,ctx:loop
+src/src/file_handler.cpp,src/src/tick.cpp,0,0,0,0,
+src/src/file_handler.cpp,src/src/wifi_handler.cpp,203.7016103,200.7016103,1,2,"state:configReg.UIN.val(k=2,m=0.63); state:configReg.flags.Val(k=2,m=0.63); state:configReg.whitelist_inherit1(k=2,m=0.63); ctx:http route handler; calls:1 dir:B→A"
+src/src/gpio_handler.cpp,src/src/imu_handler.cpp,1,0,1,0,ctx:loop
+src/src/gpio_handler.cpp,src/src/leddisplay_handler.cpp,2.333333333,1.333333333,1,0,"state:configReg.telephone_operating_mode(k=7,m=0.33); ctx:loop"
+src/src/gpio_handler.cpp,src/src/modem_handler.cpp,9.103477594,8.103477594,1,0,"state:statusReg.flags.io1_input_status(k=2,m=0.63); state:statusReg.flags.io2_input_status(k=2,m=0.63); state:statusReg.flags.door_open(k=4,m=0.43); ctx:loop"
+src/src/gpio_handler.cpp,src/src/power_handler.cpp,9,0,1,8,ctx:loop; calls:4 dir:B→A
+src/src/gpio_handler.cpp,src/src/serial_transport.cpp,0,0,0,0,
+src/src/gpio_handler.cpp,src/src/test_handler.cpp,10,0,0,10,calls:5 dir:B→A
+src/src/gpio_handler.cpp,src/src/tft_handler.cpp,1,0,1,0,ctx:loop
+src/src/gpio_handler.cpp,src/src/tick.cpp,36,0,0,36,calls:18 dir:A→B
+src/src/gpio_handler.cpp,src/src/wifi_handler.cpp,5.778745798,4.778745798,1,0,"state:configReg.flags.door_stuck_message_disable(k=4,m=0.43); state:statusReg.flags.door_open(k=4,m=0.43); state:configReg.telephone_operating_mode(k=7,m=0.33); ctx:loop"
+src/src/imu_handler.cpp,src/src/leddisplay_handler.cpp,1,0,1,0,ctx:loop
+src/src/imu_handler.cpp,src/src/modem_handler.cpp,6.722706232,5.722706232,1,0,"state:statusReg.imu_pitch(k=3,m=0.50); state:statusReg.imu_roll(k=3,m=0.50); state:configReg.imu_tip_threshold(k=4,m=0.43); ctx:loop"
+src/src/imu_handler.cpp,src/src/power_handler.cpp,1,0,1,0,ctx:loop
+src/src/imu_handler.cpp,src/src/serial_transport.cpp,0,0,0,0,
+src/src/imu_handler.cpp,src/src/test_handler.cpp,0,0,0,0,
+src/src/imu_handler.cpp,src/src/tft_handler.cpp,1,0,1,0,ctx:loop
+src/src/imu_handler.cpp,src/src/tick.cpp,4,0,0,4,calls:2 dir:A→B
+src/src/imu_handler.cpp,src/src/wifi_handler.cpp,11.24642525,10.24642525,1,0,"state:configReg.flags.imu_vertical_swap_enabled(k=2,m=0.63); state:configReg.flags.imu_enabled(k=3,m=0.50); state:statusReg.imu_pitch(k=3,m=0.50); ctx:loop"
+src/src/leddisplay_handler.cpp,src/src/modem_handler.cpp,18.43393539,17.43393539,1,0,"state:statusReg.flags.sms_command_processed(k=2,m=0.63); state:statusReg.flags.call_volte_active(k=3,m=0.50); state:statusReg.flags.modem_no_sim(k=3,m=0.50); ctx:loop"
+src/src/leddisplay_handler.cpp,src/src/power_handler.cpp,1,0,1,0,ctx:loop
+src/src/leddisplay_handler.cpp,src/src/serial_transport.cpp,0,0,0,0,
+src/src/leddisplay_handler.cpp,src/src/test_handler.cpp,0,0,0,0,
+src/src/leddisplay_handler.cpp,src/src/tft_handler.cpp,1,0,1,0,ctx:loop
+src/src/leddisplay_handler.cpp,src/src/tick.cpp,4,0,0,4,calls:2 dir:A→B
+src/src/leddisplay_handler.cpp,src/src/wifi_handler.cpp,16.29528851,15.29528851,1,0,"state:statusReg.flags.wifi_update_in_progress(k=2,m=0.63); state:generalFlags.force_led_update(k=3,m=0.50); state:configReg.flags.led_board_status_enabled(k=4,m=0.43); ctx:loop"
+src/src/modem_handler.cpp,src/src/power_handler.cpp,4.445412465,3.445412465,1,0,"state:configReg.battery_chargerate(k=4,m=0.43); state:configReg.battery_low_level(k=4,m=0.43); ctx:loop"
+src/src/modem_handler.cpp,src/src/serial_transport.cpp,2,0,0,2,calls:1 dir:A→B
+src/src/modem_handler.cpp,src/src/test_handler.cpp,6,0,0,6,calls:3 dir:B→A
+src/src/modem_handler.cpp,src/src/tft_handler.cpp,1,0,1,0,ctx:loop
+src/src/modem_handler.cpp,src/src/tick.cpp,72,0,0,72,calls:36 dir:A→B
+src/src/modem_handler.cpp,src/src/wifi_handler.cpp,192.8577502,191.8577502,1,0,"state:configReg.UIN.lval(k=2,m=0.63); state:configReg.flags.ftp_secure_enabled(k=2,m=0.63); state:generalFlags.sim_switch_reboot_request(k=2,m=0.63); ctx:loop"
+src/src/power_handler.cpp,src/src/serial_transport.cpp,0,0,0,0,
+src/src/power_handler.cpp,src/src/test_handler.cpp,0,0,0,0,
+src/src/power_handler.cpp,src/src/tft_handler.cpp,1,0,1,0,ctx:loop
+src/src/power_handler.cpp,src/src/tick.cpp,8,0,0,8,calls:4 dir:A→B
+src/src/power_handler.cpp,src/src/wifi_handler.cpp,6.445412465,5.445412465,1,0,"state:configReg.flags.charger_temperature_enable(k=3,m=0.50); state:configReg.battery_chargerate(k=4,m=0.43); state:configReg.battery_low_level(k=4,m=0.43); ctx:loop"
+src/src/serial_transport.cpp,src/src/test_handler.cpp,0,0,0,0,
+src/src/serial_transport.cpp,src/src/tft_handler.cpp,0,0,0,0,
+src/src/serial_transport.cpp,src/src/tick.cpp,0,0,0,0,
+src/src/serial_transport.cpp,src/src/wifi_handler.cpp,0,0,0,0,
+src/src/test_handler.cpp,src/src/tft_handler.cpp,0,0,0,0,
+src/src/test_handler.cpp,src/src/tick.cpp,0,0,0,0,
+src/src/test_handler.cpp,src/src/wifi_handler.cpp,0,0,0,0,
+src/src/tft_handler.cpp,src/src/tick.cpp,0,0,0,0,
+src/src/tft_handler.cpp,src/src/wifi_handler.cpp,1,0,1,0,ctx:loop
+src/src/tick.cpp,src/src/wifi_handler.cpp,0,0,0,0,

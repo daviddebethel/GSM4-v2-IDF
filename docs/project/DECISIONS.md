@@ -77,6 +77,14 @@ Append a new section using this template:
 - **Consequences:** Clear ownership and testability; requires careful mapping from legacy bus semantics.
 - **Links:** `docs/interfaces/COMMANDS_EVENTS.md`, `docs/analysis/05_bus_access_union_fn_refined.md`
 
+### ADR-20260216-idf-version-and-upgrade-policy
+- **Status:** Accepted
+- **Context:** We need deterministic tooling and controlled change risk during Phase 1 parity.
+- **Decision:** ESP-IDF pinned to v5.5.2.
+- **Options considered:** Floating latest patch releases; immediate minor upgrades.
+- **Consequences:** Upgrade policy: bugfix updates only during Phase 1 parity, planned minor upgrades at phase boundaries.
+- **Links:** `docs/project/REWRITE_PROGRAMME.md`
+
 ---
 
 ## Superseded decisions
