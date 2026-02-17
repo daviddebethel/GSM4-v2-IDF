@@ -85,6 +85,11 @@ Release debug policy:
 - `release` profile defaults to serial debug locked down and runtime debug channels off.
 - Runtime debug is enabled only via authenticated, role-gated, feature-flagged web controls.
 
+Partition/webfs scaffolding:
+- Firmware uses custom 16MB partition table: `firmware/partitions_16mb.csv` (OTA A/B + `webfs` FATFS partition).
+- Firmware build packages web assets into `webfs` via `fatfs_create_spiflash_image`.
+- Source path is `web/dist`; if absent, fallback scaffold content in `firmware/web_fallback` is packaged.
+
 Phase 1 testing strategy:
 - ESP-IDF Unity on-target tests are the baseline test runner.
 - Mock-based unit tests are the unit-testing layer for logic modules.

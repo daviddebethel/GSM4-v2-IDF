@@ -450,6 +450,11 @@ Implementation notes:
 - Keep UI assets versioned and traceable to firmware releases.
 - OTA A/B rollback applies to app partitions; web/data partition is single-copy by default, so add app-assets compatibility/version checks.
 - Keep build-profile separation explicit so development convenience does not relax release security settings.
+- Foundation scaffolding implemented:
+  - custom partition table at `firmware/partitions_16mb.csv` (OTA A/B + `webfs` FATFS partition),
+  - profile defaults point to 16MB/custom partition in `firmware/sdkconfig.defaults`,
+  - FATFS image generation integrated in `firmware/main/CMakeLists.txt` via `fatfs_create_spiflash_image(webfs ...)`,
+  - source directory is `web/dist` with fallback scaffold content in `firmware/web_fallback`.
 
 Testing impact:
 - Add FATFS + wear levelling mount/read/write tests and recovery-path tests.
@@ -536,7 +541,7 @@ All Section 4 clarifications are now decided.
 Implement technical scaffolding for 4.1-4.4 and 4.6 (including 4.4.1) in one pass:
 - DONE: 4.1 GitHub Actions workflow scaffolding is in place with submodule checkout in `.github/workflows/ci.yml`.
 - 4.2: add serial-first workflow scaffolding (documented commands/scripts for flash + monitor).
-- 4.3: add partition and filesystem-image build scaffolding for web assets.
+- DONE: 4.3 partition and filesystem-image scaffolding is in place (`firmware/partitions_16mb.csv`, profile defaults + `fatfs_create_spiflash_image(webfs ...)` integration).
 - DONE: 4.4 initial CI test execution wiring exists via `unit-tests` and `mock-tests` jobs (foundation JUnit output + profile build validation).
 - DONE: 4.4.1 script entrypoints are wired (`tools/test_unit.sh`, `tools/test_mock.sh`, `tools/test_secure_smoke.sh`) with local/CI parity.
 - DONE: Option 2 build-profile foundation is in place (`dev`, `ci-test`, `ci-secure`, `release`) via `main/Kconfig.projbuild`, `firmware/sdkconfig.defaults*`, and profile-aware `tools/build_firmware.sh`.

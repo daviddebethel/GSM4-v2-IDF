@@ -10,3 +10,13 @@ CONFIG_GSM4_BUILD_PROFILE_DEV=y
 
 # Safe baseline: runtime web debug channels are default-off in all profiles.
 CONFIG_GSM4_RUNTIME_DEBUG_WEB_DEFAULT_ON=n
+
+# Flash and partition baseline for ESP32-WROOM-32E (16MB).
+CONFIG_ESPTOOLPY_FLASHSIZE_16MB=y
+CONFIG_ESPTOOLPY_FLASHSIZE="16MB"
+CONFIG_PARTITION_TABLE_CUSTOM=y
+CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions_16mb.csv"
+CONFIG_PARTITION_TABLE_FILENAME="partitions_16mb.csv"
+
+# Web assets require long filenames in FATFS images.
+CONFIG_FATFS_LFN_HEAP=y
