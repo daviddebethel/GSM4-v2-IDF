@@ -1,2 +1,6 @@
 firmware/build/
 firmware/sdkconfig
+artifacts/
+firmware/tests/host/**/build/
+firmware/tests/host/**/sdkconfig
+firmware/tests/host/**/sdkconfig.old

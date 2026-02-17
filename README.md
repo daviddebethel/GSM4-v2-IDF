@@ -64,7 +64,8 @@ Phase 1 CI decision:
 
 Scaffolding status:
 - CI foundation is implemented in `.github/workflows/ci.yml` with submodule checkout and profile-aware job commands.
-- Unit/mock jobs currently publish foundation JUnit artifacts while full test suites are being scaffolded.
+- Unit tests run a real Unity host test binary (`firmware/tests/host/unit`) and publish JUnit + host logs.
+- Mock tests run a real Unity+CMock host test binary (`firmware/tests/host/mock`) and publish JUnit + host logs.
 
 Current CI jobs:
 - firmware build
@@ -120,4 +121,6 @@ Release policy validation:
 - `tools/check_release_policy.sh`
 
 Firmware unit tests (example):
-- `idf.py test` or `idf.py -T all build` (depending on your chosen IDF test setup)
+- `tools/test_unit.sh`
+- `tools/test_mock.sh`
+- Note: host mock test generation uses CMock and requires `ruby` on the host.

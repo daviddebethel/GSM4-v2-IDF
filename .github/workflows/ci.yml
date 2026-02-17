@@ -56,7 +56,7 @@ jobs:
       - name: Install ESP-IDF tools
         run: ./third_party/esp-idf/install.sh esp32
 
-      - name: Run unit test foundation
+      - name: Run unit tests
         env:
           ARTIFACTS_DIR: ${{ runner.temp }}/artifacts
         run: ./tools/test_unit.sh
@@ -66,7 +66,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: unit-tests-artifacts
-          path: ${{ runner.temp }}/artifacts/unit-tests.junit.xml
+          path: |
+            ${{ runner.temp }}/artifacts/unit-tests.junit.xml
+            ${{ runner.temp }}/artifacts/unit-tests.host.log
           if-no-files-found: error
 
   mock-tests:
@@ -87,7 +89,7 @@ jobs:
       - name: Install ESP-IDF tools
         run: ./third_party/esp-idf/install.sh esp32
 
-      - name: Run mock test foundation
+      - name: Run mock tests
         env:
           ARTIFACTS_DIR: ${{ runner.temp }}/artifacts
         run: ./tools/test_mock.sh
@@ -97,7 +99,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: mock-tests-artifacts
-          path: ${{ runner.temp }}/artifacts/mock-tests.junit.xml
+          path: |
+            ${{ runner.temp }}/artifacts/mock-tests.junit.xml
+            ${{ runner.temp }}/artifacts/mock-tests.host.log
           if-no-files-found: error
 
   ci-secure:

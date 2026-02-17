@@ -1,0 +1,10 @@
+# Placeholder for module-local CMock configuration.
+# IDF currently consumes mock configuration from each mock component's
+# `mock/mock_config.yaml` directory.
+#
+# Keep this file as the module-level contract anchor described in
+# ESP_IDF_SETUP_GUIDE section 4.4.1.
+:cmock:
+  :plugins:
+    - expect
+    - ignore
