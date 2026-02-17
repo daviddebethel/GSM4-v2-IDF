@@ -77,7 +77,7 @@ Required PR merge checks (Option 2 Balanced Gate):
 - `mock-tests`
 - `lint-format`
 - `ci-secure`
-- `release-policy-check`
+- `release-policy-check` (`tools/check_release_policy.sh`)
 
 Release debug policy:
 - `release` profile defaults to serial debug locked down and runtime debug channels off.
@@ -101,11 +101,16 @@ Codex governance:
   - acceptance gates
   - traceability mappings
 
-## Quick commands (placeholders)
+## Quick commands
 
-These are placeholders until `/firmware` and CI scripts are finalised. Update this section once the project skeleton is in place.
+Build profiles:
+- `tools/build_firmware.sh --profile dev build`
+- `tools/build_firmware.sh --profile ci-test build`
+- `tools/build_firmware.sh --profile ci-secure build`
+- `tools/build_firmware.sh --profile release build`
 
-- Firmware build (example):
-  - `idf.py build`
-- Firmware unit tests (example):
-  - `idf.py test` or `idf.py -T all build` (depending on your chosen IDF test setup)
+Release policy validation:
+- `tools/check_release_policy.sh`
+
+Firmware unit tests (example):
+- `idf.py test` or `idf.py -T all build` (depending on your chosen IDF test setup)

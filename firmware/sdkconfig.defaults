@@ -1,0 +1,12 @@
+# Shared defaults for all build profiles.
+#
+# Profile-specific overlays are provided in:
+# - sdkconfig.defaults.dev
+# - sdkconfig.defaults.ci-test
+# - sdkconfig.defaults.ci-secure
+# - sdkconfig.defaults.release
+
+CONFIG_GSM4_BUILD_PROFILE_DEV=y
+
+# Safe baseline: runtime web debug channels are default-off in all profiles.
+CONFIG_GSM4_RUNTIME_DEBUG_WEB_DEFAULT_ON=n

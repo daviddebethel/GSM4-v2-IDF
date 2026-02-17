@@ -1,0 +1,67 @@
+menu "GSM4 Build Profile"
+
+choice GSM4_BUILD_PROFILE
+    prompt "Build profile contract"
+    default GSM4_BUILD_PROFILE_DEV
+    help
+        Select one build profile from the agreed Option 2 contract.
+
+config GSM4_BUILD_PROFILE_DEV
+    bool "dev"
+
+config GSM4_BUILD_PROFILE_CI_TEST
+    bool "ci-test"
+
+config GSM4_BUILD_PROFILE_CI_SECURE
+    bool "ci-secure"
+
+config GSM4_BUILD_PROFILE_RELEASE
+    bool "release"
+
+endchoice
+
+config GSM4_BUILD_PROFILE_NAME
+    string
+    default "dev" if GSM4_BUILD_PROFILE_DEV
+    default "ci-test" if GSM4_BUILD_PROFILE_CI_TEST
+    default "ci-secure" if GSM4_BUILD_PROFILE_CI_SECURE
+    default "release" if GSM4_BUILD_PROFILE_RELEASE
+
+config GSM4_TEST_HARNESS_MODE
+    bool "Enable test harness hooks"
+    default y if GSM4_BUILD_PROFILE_DEV || GSM4_BUILD_PROFILE_CI_TEST
+    default n
+    help
+        Enables deterministic test seam wiring and mock injection hooks.
+        Should remain disabled for ci-secure and release builds.
+
+config GSM4_SERIAL_DEBUG_ENABLED
+    bool "Enable serial debug stream"
+    default y if GSM4_BUILD_PROFILE_DEV || GSM4_BUILD_PROFILE_CI_TEST
+    default n
+    help
+        Controls serial debug output in application code. This must be off for
+        release-safe profiles unless explicitly enabled for controlled service use.
+
+config GSM4_RUNTIME_DEBUG_WEB_DEFAULT_ON
+    bool "Enable runtime web debug channels by default"
+    default n
+    help
+        Policy default for runtime web debug channels. Release requires default-off.
+
+config GSM4_RELEASE_SAFE_DEFAULTS
+    bool
+    default y if GSM4_BUILD_PROFILE_CI_SECURE || GSM4_BUILD_PROFILE_RELEASE
+    default n
+
+config GSM4_SERIAL_DEBUG_LOCKDOWN
+    bool
+    default y if GSM4_BUILD_PROFILE_RELEASE
+    default n
+
+config GSM4_REQUIRE_RELEASE_SECURITY_CONTROLS
+    bool
+    default y if GSM4_BUILD_PROFILE_CI_SECURE || GSM4_BUILD_PROFILE_RELEASE
+    default n
+
+endmenu

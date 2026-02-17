@@ -215,7 +215,7 @@ IDF="${REPO_ROOT}/third_party/esp-idf"
 . "${IDF}/export.sh"
 ```
 
-Create `tools/build_firmware.sh`:
+Create `tools/build_firmware.sh` (profile-aware):
 
 ```sh
 #!/usr/bin/env bash
@@ -224,15 +224,25 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 . "${REPO_ROOT}/tools/idf_env.sh"
 cd "${REPO_ROOT}/firmware"
-idf.py build
+profile="dev"
+if [ "${1-}" = "--profile" ]; then
+  profile="$2"
+  shift 2
+fi
+export SDKCONFIG_DEFAULTS="${REPO_ROOT}/firmware/sdkconfig.defaults;${REPO_ROOT}/firmware/sdkconfig.defaults.${profile}"
+if [ $# -eq 0 ]; then
+  set -- build
+fi
+idf.py -B "build/${profile}" -DSDKCONFIG="build/${profile}/sdkconfig" "$@"
 ```
 
-Use the wrapper from any shell:
+Use the wrappers from any shell:
 
 ```sh
 source tools/idf_env.sh
-cd firmware
-idf.py reconfigure
+tools/build_firmware.sh --profile dev build
+tools/build_firmware.sh --profile release reconfigure build
+tools/check_release_policy.sh
 ```
 
 Make them executable and commit:
@@ -529,8 +539,8 @@ Implement technical scaffolding for 4.1-4.4 and 4.6 (including 4.4.1) in one pas
 - 4.3: add partition and filesystem-image build scaffolding for web assets.
 - 4.4: add Unity + mock unit-test scaffolding and initial test execution wiring in CI.
 - 4.4.1: add the agreed test directory layout, naming conventions, and script entrypoints wired to local + CI workflows.
-- TODO: implement Option 2 profile wiring for `dev`, `ci-test`, `ci-secure`, and `release`.
-- TODO: ensure `ci-test` enables test harness + mock injection while `ci-secure`/`release` keep them disabled by default.
-- TODO: add serial debug stream controls tied to build profiles (`dev`/`ci-test` verbose; `ci-secure`/`release` minimal/default-off), including CI verification that release artifacts do not enable development debug flags.
+- DONE: Option 2 build-profile foundation is in place (`dev`, `ci-test`, `ci-secure`, `release`) via `main/Kconfig.projbuild`, `firmware/sdkconfig.defaults*`, and profile-aware `tools/build_firmware.sh`.
+- DONE: test harness default contract is wired (`ci-test` enabled by defaults; `ci-secure`/`release` disabled by defaults).
+- DONE: serial debug flag gating foundation is wired (`dev`/`ci-test` enabled by defaults; `ci-secure`/`release` default-off) with baseline release validation in `tools/check_release_policy.sh`.
 - TODO: implement release debug policy scaffolding (serial locked down in `release`; web runtime debug controls role-gated/authenticated/feature-flagged; default-off release config; optional secure upstream streaming kept disabled unless explicitly enabled).
 - TODO: implement Option 2 required merge checks and branch protection policy (`build-firmware`, `unit-tests`, `mock-tests`, `lint-format`, `ci-secure`, `release-policy-check`) with stable job naming.
