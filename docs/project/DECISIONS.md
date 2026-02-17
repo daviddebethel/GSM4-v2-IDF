@@ -1,7 +1,7 @@
 # Decisions (GSM4 v2 IDF rewrite)
 
 **Monorepo:** `https://github.com/daviddebethel/GSM4-v2-IDF.git`  
-**Last updated:** 2026-02-15
+**Last updated:** 2026-02-17
 
 This file is a lightweight decision log (ADR-style).  
 It exists to capture the “why” behind choices so we do not re-litigate them later, and so GPT Codex stays aligned.
@@ -84,6 +84,22 @@ Append a new section using this template:
 - **Options considered:** Floating latest patch releases; immediate minor upgrades.
 - **Consequences:** Upgrade policy: bugfix updates only during Phase 1 parity, planned minor upgrades at phase boundaries.
 - **Links:** `docs/project/REWRITE_PROGRAMME.md`
+
+### ADR-20260217-idf-env-shell-and-workspace-hardening
+- **Status:** Accepted
+- **Context:** Local setup failed for contributors using `zsh` because `tools/idf_env.sh` was Bash-specific (`BASH_SOURCE`) and changed caller shell options (`set -euo pipefail`) when sourced. The workspace file also lacked ESP-IDF settings, so extension behavior depended on machine-global state.
+- **Decision:** Make `tools/idf_env.sh` source-safe for `bash` and `zsh` and keep it side-effect free for shell options; keep `tools/build_firmware.sh` as an executable wrapper; commit workspace defaults for `idf.espIdfPath`, `idf.currentSetup`, `idf.toolsPath`, and `idf.customExtraVars.IDF_TOOLS_PATH`.
+- **Options considered:** Keep bash-only helpers and require direct `third_party/esp-idf/export.sh` usage; rely on each developer to run extension setup wizard manually; harden scripts plus commit workspace defaults.
+- **Consequences:** Consistent activation/configuration across shells and machines, fewer onboarding regressions, less dependence on undocumented local VS Code state.
+- **Links:** `tools/idf_env.sh`, `tools/build_firmware.sh`, `GSM4-v2-IDF-1.code-workspace`, `.vscode/settings.json`, `docs/setup guides/ESP_IDF_SETUP_GUIDE.md`
+
+### ADR-20260217-vscode-idf-extension-v2-registration
+- **Status:** Accepted
+- **Context:** ESP-IDF extension `v2.x` discovers available setups from installation metadata files (`esp_idf.json` / `eim_idf.json`). On clean machines this metadata may be missing even when `idf.py` works in shell, causing an empty `ESP-IDF: Explorer` command view.
+- **Decision:** Add and use a repo script `tools/register_idf_for_vscode.sh` to register the current checkout in the extension catalog (`$HOME/.espressif/esp_idf.json`), then select current IDF version in VS Code.
+- **Options considered:** Depend only on extension installation manager UI; keep undocumented per-machine manual fixes; provide deterministic script plus documented workflow.
+- **Consequences:** Reproducible extension onboarding, reduced IDE-only failure modes, and explicit bridge between shell-valid setup and extension metadata.
+- **Links:** `tools/register_idf_for_vscode.sh`, `docs/setup guides/ESP_IDF_SETUP_GUIDE.md`, `README.md`
 
 ---
 

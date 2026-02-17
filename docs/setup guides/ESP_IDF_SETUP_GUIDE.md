@@ -1,6 +1,6 @@
 # ESP-IDF setup guide for GSM4-v2-IDF (ESP32-WROOM-32)
 
-Date: 2026-02-16
+Date: 2026-02-17
 
 This guide assumes:
 - You are developing on **macOS**.
@@ -187,9 +187,31 @@ Create `tools/idf_env.sh`:
 
 ```sh
 #!/usr/bin/env bash
-set -euo pipefail
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# Source-safe helper: works from bash and zsh without changing shell options.
+_idf_env_die() {
+    echo "ERROR: $*" >&2
+    return 1 2>/dev/null || exit 1
+}
+
+_idf_env_repo_root() {
+    local root=""
+    if command -v git >/dev/null 2>&1; then
+        root="$(git rev-parse --show-toplevel 2>/dev/null || true)"
+    fi
+    if [ -z "${root}" ] && [ -n "${BASH_SOURCE[0]-}" ]; then
+        root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null 2>&1 && pwd || true)"
+    fi
+    if [ -z "${root}" ] && [ -n "${ZSH_VERSION-}" ]; then
+        zsh_path="$(eval 'printf "%s" "${(%):-%x}"' 2>/dev/null || true)"
+        [ -n "${zsh_path}" ] && root="$(cd "$(dirname "${zsh_path}")/.." >/dev/null 2>&1 && pwd || true)"
+    fi
+    [ -n "${root}" ] || return 1
+    printf '%s\n' "${root}"
+}
+
+REPO_ROOT="$(_idf_env_repo_root)" || _idf_env_die "Unable to determine repository root."
 IDF="${REPO_ROOT}/third_party/esp-idf"
+[ -f "${IDF}/export.sh" ] || _idf_env_die "Missing ${IDF}/export.sh"
 . "${IDF}/export.sh"
 ```
 
@@ -198,10 +220,19 @@ Create `tools/build_firmware.sh`:
 ```sh
 #!/usr/bin/env bash
 set -euo pipefail
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 . "${REPO_ROOT}/tools/idf_env.sh"
 cd "${REPO_ROOT}/firmware"
 idf.py build
+```
+
+Use the wrapper from any shell:
+
+```sh
+source tools/idf_env.sh
+cd firmware
+idf.py reconfigure
 ```
 
 Make them executable and commit:
@@ -225,6 +256,67 @@ Practical steps:
 2. Command Palette → `ESP-IDF: Configure ESP-IDF extension` (setup wizard). citeturn0search0
 3. Point **IDF_PATH** to: `<repo>/third_party/esp-idf`
 4. Let it detect or install required tools (or keep using the tools installed by `install.sh` above).
+5. Commit workspace defaults so new contributors inherit the same in-repo IDF path:
+
+```json
+{
+  "folders": [{ "path": "." }],
+  "settings": {
+    "idf.espIdfPath": "${workspaceFolder}/third_party/esp-idf",
+    "idf.currentSetup": "${workspaceFolder}/third_party/esp-idf",
+    "idf.toolsPath": "${env:HOME}/.espressif",
+    "idf.customExtraVars": {
+      "IDF_TOOLS_PATH": "${env:HOME}/.espressif"
+    }
+  }
+}
+```
+
+If contributors open the repository as a plain folder (not the `.code-workspace` file), keep the same settings in `.vscode/settings.json`:
+
+```json
+{
+  "idf.espIdfPath": "${workspaceFolder}/third_party/esp-idf",
+  "idf.currentSetup": "${workspaceFolder}/third_party/esp-idf",
+  "idf.toolsPath": "${env:HOME}/.espressif",
+  "idf.customExtraVars": {
+    "IDF_TOOLS_PATH": "${env:HOME}/.espressif"
+  }
+}
+```
+
+6. Register this checkout in the ESP-IDF extension catalog used by extension v2:
+
+```sh
+./tools/register_idf_for_vscode.sh
+```
+
+Then in VS Code:
+1) `ESP-IDF: Select Current ESP-IDF Version`  
+2) Select this repo's `third_party/esp-idf` entry  
+3) `Developer: Reload Window`
+
+#### 3.3.1 Common activation failures (and fixes now applied)
+
+1) Symptom:
+`tools/idf_env.sh: BASH_SOURCE[0]: parameter not set`
+- Cause: Bash-only path resolution sourced from `zsh`.
+- Fix: use the updated `tools/idf_env.sh` in this repo (source-safe for `bash` and `zsh`).
+
+2) Symptom:
+Shell starts failing unexpectedly after sourcing the env script (for example `set -u` behavior in unrelated commands).
+- Cause: `set -euo pipefail` was being applied by a sourced helper script.
+- Fix: the updated `tools/idf_env.sh` no longer mutates caller shell options.
+
+3) Symptom:
+ESP-IDF extension opens but this workspace does not point at the in-repo IDF.
+- Cause: workspace settings file had no ESP-IDF keys.
+- Fix: workspace now includes `idf.espIdfPath` and `idf.toolsPath` defaults.
+
+4) Symptom:
+`ESP-IDF: Explorer` appears, but command entries are missing/empty.
+- Cause: ESP-IDF extension v2 did not find a registered setup in its install catalog (`esp_idf.json` / `eim_idf.json`).
+- Fix: run `./tools/register_idf_for_vscode.sh`, then select the current ESP-IDF version in VS Code and reload the window.
 
 ### 3.4 Make Codex outputs more reliable (recommended repo hygiene)
 

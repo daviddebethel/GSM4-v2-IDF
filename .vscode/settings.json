@@ -1,0 +1,8 @@
+{
+  "idf.espIdfPath": "${workspaceFolder}/third_party/esp-idf",
+  "idf.currentSetup": "${workspaceFolder}/third_party/esp-idf",
+  "idf.toolsPath": "${env:HOME}/.espressif",
+  "idf.customExtraVars": {
+    "IDF_TOOLS_PATH": "${env:HOME}/.espressif"
+  }
+}

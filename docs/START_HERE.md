@@ -23,6 +23,9 @@ This repo is a full rewrite of the GSM4 firmware onto **ESP-IDF**, preserving le
 5) **Module contracts (v1 rewrite contracts, one per module)**  
 - `docs/contracts/v1/`
 
+6) **ESP-IDF local setup (activation, build wrappers, VS Code defaults)**
+- `docs/setup guides/ESP_IDF_SETUP_GUIDE.md`
+
 ---
 
 ## Key rules (to keep the rewrite correct)

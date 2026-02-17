@@ -1,8 +1,12 @@
 {
 	"folders": [
 		{
+			"name": "Firmware",
+			"path": "firmware"
+		},
+		{
+			"name": "Repo Root",
 			"path": "."
 		}
-	],
-	"settings": {}
+	]
 }
