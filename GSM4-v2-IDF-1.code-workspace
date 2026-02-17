@@ -1,12 +1,20 @@
 {
-	"folders": [
-		{
-			"name": "Firmware",
-			"path": "firmware"
-		},
-		{
-			"name": "Repo Root",
-			"path": "."
-		}
-	]
+  "folders": [
+    {
+      "name": "Firmware",
+      "path": "firmware"
+    },
+    {
+      "name": "Repo Root",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "idf.espIdfPath": "${workspaceFolder:Repo Root}/third_party/esp-idf",
+    "idf.currentSetup": "${workspaceFolder:Repo Root}/third_party/esp-idf",
+    "idf.toolsPath": "${env:HOME}/.espressif",
+    "idf.customExtraVars": {
+      "IDF_TOOLS_PATH": "${env:HOME}/.espressif"
+    }
+  }
 }

@@ -9,10 +9,37 @@
 - Use "Failure signatures" to triage regressions quickly.
 - Track unresolved items under "Open questions and evidence gaps" as TODO gate blockers.
 
+## Hard vs migration-allowed boundaries (Phase 1 rewrite policy)
+
+This rewrite is intended to improve architecture, code flow, security posture, and testability while preserving externally observable behavior.
+
+### Hard invariants (must preserve)
+
+- External behavior contracts: route surface and response shapes, modem/audio/io outcomes, and documented status/config semantics.
+- Persistence compatibility: `/config.ini` read/write/recovery marker behavior until a migration is explicitly gated.
+- Timing semantics: TickGet/timebase-driven timeout and periodic gate behavior for acceptance-covered flows.
+- Cross-module handshake semantics: documented command/event intent and shared-state meaning where still used in Phase 1.
+- Security baseline: no new secret leakage in logs, responses, or debug paths; auth/session boundaries remain enforced.
+
+### Migration-allowed changes (explicitly allowed and encouraged)
+
+- Move owner execution from legacy loop/callback patterns to IDF task/service ownership.
+- Replace direct shared-state coupling with queue/event/snapshot interfaces.
+- Refactor internal call chains, function decomposition, file layout, and module boundaries.
+- Introduce HAL seams and mocks to improve deterministic unit testing and future HiL readiness.
+- Add security hooks/abstractions that do not alter Phase 1 externally observable behavior.
+
+### Required evidence when applying migration-allowed changes
+
+- Acceptance checks for affected gates must pass and be recorded.
+- Unit and mock test coverage for changed logic must be added/updated.
+- `docs/tests/TRACEABILITY.md` must be updated for changed gates/tests/CI evidence.
+- Any contract/interface behavior delta must be documented in the relevant contract and decision log.
+
 ## Global acceptance gates
 
-1. MUST preserve module owner execution contexts documented in v1 contracts (loop/task/ISR/callback) for each acceptance path.
-2. MUST preserve documented task-chain entry paths (System Orchestrator -> module entry functions) for all runtime-critical modules.
+1. MUST preserve externally observable behavior for each acceptance path, while allowing migration from legacy loop/callback contexts to IDF task/service ownership.
+2. MUST preserve runtime-critical entry intent and ordering semantics; internal call-chain shape may change when acceptance checks and ownership contracts remain satisfied.
 3. MUST preserve shared-state field names and semantics used as inter-module contracts (statusReg/configReg/generalFlags/gpio_controls).
 4. MUST preserve TickGet-driven timing gates and timeout semantics where explicitly documented in module contracts.
 5. MUST preserve HTTP route surface and response contract shapes documented for WiFi/Web Control Plane.

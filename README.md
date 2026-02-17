@@ -1,13 +1,13 @@
 # GSM4 v2 IDF
 
-**Monorepo:** `https://github.com/daviddebethel/GSM4-v2-IDF.git`  
+**Monorepo:** `https://github.com/daviddebethel/GSM4-v2-IDF.git`
 **Last updated:** 2026-02-17
 
 This repository is a rebuild of the GSM4 firmware onto **ESP-IDF**, with a modern web UI stack and a strong test and documentation discipline.
 
 ## Start here
 
-- **Read first:** `docs/START_HERE.md`  
+- **Read first:** `docs/START_HERE.md`
   (links to programme board, acceptance gates, target architecture, interfaces, and module contracts)
 - **ESP-IDF setup + troubleshooting:** `docs/setup guides/ESP_IDF_SETUP_GUIDE.md`
 
@@ -28,8 +28,8 @@ If **ESP-IDF: Explorer** shows no command entries, register this repo with the V
 ```
 
 Then in VS Code:
-1) `ESP-IDF: Select Current ESP-IDF Version`  
-2) Select this repo's `third_party/esp-idf` entry  
+1) `ESP-IDF: Select Current ESP-IDF Version`
+2) Select this repo's `third_party/esp-idf` entry
 3) `Developer: Reload Window`
 
 Common symptoms and fixes (zsh/bash wrapper compatibility, shell option side effects, and VS Code workspace IDF path) are documented in:
@@ -45,9 +45,9 @@ Common symptoms and fixes (zsh/bash wrapper compatibility, shell option side eff
 
 ## Workflow (high level)
 
-1) Use **module contracts** as rewrite contracts: `docs/contracts/v1/`  
-2) Use **acceptance gates** as definition of done: `docs/tests/ACCEPTANCE_INVARIANTS.md`  
-3) Use **commands and events** as the system interface: `docs/interfaces/COMMANDS_EVENTS.md`  
+1) Use **module contracts** as rewrite contracts: `docs/contracts/v1/`
+2) Use **acceptance gates** as definition of done: `docs/tests/ACCEPTANCE_INVARIANTS.md`
+3) Use **commands and events** as the system interface: `docs/interfaces/COMMANDS_EVENTS.md`
 4) Track progress in the programme board: `docs/project/REWRITE_PROGRAMME.md`
 
 ## Testing and traceability
@@ -57,11 +57,41 @@ Common symptoms and fixes (zsh/bash wrapper compatibility, shell option side eff
 
 ## CI
 
-CI runs on every pull request and on main (see `/.github/workflows/`).  
-The expected minimum jobs are:
+Phase 1 CI decision:
+- GitHub Actions only.
+- Build environment uses repository checkout with pinned `third_party/esp-idf` submodule (no pinned Docker image in Phase 1).
+- Build-profile contract uses Option 2: `dev`, `ci-test`, `ci-secure`, `release`.
+
+Scaffolding status:
+- Section 4 clarifications are finalized. CI workflow files and test scaffolding are the next implementation step.
+
+Expected minimum jobs once workflows are added:
 - firmware build
 - unit tests
 - mock tests (where applicable)
+- `ci-secure` release-equivalent security validation build
+
+Required PR merge checks (Option 2 Balanced Gate):
+- `build-firmware`
+- `unit-tests`
+- `mock-tests`
+- `lint-format`
+- `ci-secure`
+- `release-policy-check`
+
+Release debug policy:
+- `release` profile defaults to serial debug locked down and runtime debug channels off.
+- Runtime debug is enabled only via authenticated, role-gated, feature-flagged web controls.
+
+Phase 1 testing strategy:
+- ESP-IDF Unity on-target tests are the baseline test runner.
+- Mock-based unit tests are the unit-testing layer for logic modules.
+- HiL test automation is planned as a later layer and reassessed at each development stage.
+- Test stack/layout contract: Unity + CMock (`idf_component_mock`) with module-local `test`/`test/mocks` structure and shared `tools/test_*.sh` entrypoints for local/CI parity.
+
+Codex governance:
+- Codex-delivered changes must follow `docs/CODEX_RULES.md`.
+- This includes mandatory unit+mock testing for behavior changes, HiL-ready abstraction seams, coding standards/lint/layout discipline, and serial debug stream gating by build profile (dev/CI-test vs release).
 
 ## Contributing guidelines (important)
 

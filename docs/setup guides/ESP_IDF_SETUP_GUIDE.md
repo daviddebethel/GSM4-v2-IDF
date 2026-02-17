@@ -292,8 +292,8 @@ If contributors open the repository as a plain folder (not the `.code-workspace`
 ```
 
 Then in VS Code:
-1) `ESP-IDF: Select Current ESP-IDF Version`  
-2) Select this repo's `third_party/esp-idf` entry  
+1) `ESP-IDF: Select Current ESP-IDF Version`
+2) Select this repo's `third_party/esp-idf` entry
 3) `Developer: Reload Window`
 
 #### 3.3.1 Common activation failures (and fixes now applied)
@@ -362,25 +362,175 @@ Why this matters:
 
 ---
 
-## 4) Additional steps you should consider including (recommended)
+## 4) Additional setup decisions (decision tracker)
 
-These are worth including, but I need your decisions to make them concrete.
+This section tracks the remaining setup decisions and turns them into concrete follow-on files.
 
-1) CI pinning and reproducibility
-- Do you want CI to run on **GitHub Actions** only, or also a local runner pattern?
-- Do you want CI to use the submodule checkout, or a pinned Docker image?
+### 4.1 CI pinning and reproducibility — decided on 2026-02-17
 
-2) Debugging
-- Will you use **JTAG** (ESP-Prog or similar), or is serial-only fine initially?
+Decision:
+- Use **GitHub Actions only** for Phase 1 parity CI.
+- Use repository checkout with pinned `third_party/esp-idf` submodule in CI.
+- Do **not** adopt a pinned Docker image in Phase 1.
+- Adopt build-profile contract **Option 2**: `dev`, `ci-test`, `ci-secure`, `release`.
+- `ci-secure` must build with release-equivalent security settings (secure boot + flash encryption + NVS encryption) while `ci-test` remains the fast test profile.
 
-3) Web build and packaging strategy
-You said you plan to use React + TypeScript and serve from the device.
-- Should the web build output be embedded into flash as a filesystem image, or compiled into firmware as binary blobs?
+Rationale:
+- Small contributor set and pinned IDF keep short-term drift risk low.
+- This keeps CI onboarding and maintenance overhead minimal during parity work.
 
-4) Testing baseline (unit + mocks) for IDF
-- Do you want to adopt IDF's built-in Unity test runner first, or start with host-based tests as well?
+Revisit triggers:
+- Repeated local-vs-CI mismatches attributable to environment drift.
+- Need for stricter hermetic/reproducible builds.
 
-5) Codex guardrails
-- Do you want a dedicated “Codex rules” file (for example `docs/CODEX_RULES.md`) to enforce contracts and invariants first?
+### 4.1.1 CI required checks and merge gate policy — decided on 2026-02-17
 
-If you answer those, we can extend this guide with the exact follow-on steps and ready-to-commit files (CI workflow, devcontainer if desired, test harness skeleton, and Codex rules).
+Decision:
+- Adopt **Option 2 (Balanced Gate)** as mandatory PR merge policy.
+- Required PR checks:
+  - `build-firmware`
+  - `unit-tests`
+  - `mock-tests`
+  - `lint-format`
+  - `ci-secure`
+  - `release-policy-check` (fails on development test/debug flag leakage in release profile artifacts)
+- Branch protection policy:
+  - Require at least 1 approval.
+  - Require all conversations resolved.
+  - Require branch to be up to date before merge.
+
+Implementation notes:
+- Apply required checks to protected branches used for integration/release.
+- Keep longer-running integration and future HiL suites as non-blocking/nightly until explicitly promoted.
+- Keep CI job names stable to avoid branch-protection drift.
+
+Testing impact:
+- CI must publish unit/mock JUnit artifacts and security/profile validation evidence for required checks.
+
+### 4.2 Debugging — decided on 2026-02-17
+
+Decision:
+- Use **serial-only** programming and debugging for initial bring-up and Phase 1 parity.
+- Do **not** require JTAG hardware in baseline setup.
+- Require serial debug output to be controlled by build profile flags (enabled in dev/CI-test profiles, restricted/disabled in release profile unless explicitly approved).
+
+Default workflow:
+
+```sh
+source tools/idf_env.sh
+cd firmware
+idf.py -p /dev/cu.usbserial-XXXX flash monitor
+```
+
+Follow-up:
+- Reconsider JTAG later if deep timing/concurrency issues require hardware breakpoints or watchpoints.
+
+### 4.3 Web build and packaging strategy — decided on 2026-02-17
+
+Decision:
+- Package web build output as a **flash filesystem image** in a dedicated data partition.
+- Serve assets from the mounted filesystem via `esp_http_server`.
+- Target hardware baseline is **ESP32-WROOM-32E (16MB flash)** with a **scalable custom partition layout** (start with an 8MB allocation profile now, while keeping layout/contracts scalable to full 16MB usage).
+- Use **FATFS + wear levelling + VFS** for web/data filesystem storage.
+- Security requirement: use **NVS encryption**, and require **secure boot + flash encryption + NVS encryption** in the release profile.
+
+Implementation notes:
+- Add/confirm a web assets FATFS partition in the custom partition table.
+- Generate the filesystem image from the web build output as part of the firmware build/release flow.
+- Keep UI assets versioned and traceable to firmware releases.
+- OTA A/B rollback applies to app partitions; web/data partition is single-copy by default, so add app-assets compatibility/version checks.
+- Keep build-profile separation explicit so development convenience does not relax release security settings.
+
+Testing impact:
+- Add FATFS + wear levelling mount/read/write tests and recovery-path tests.
+- Add OTA A/B tests validating app update behavior with single-copy data partition compatibility checks.
+- Add release-profile validation tests for secure boot, flash encryption, and NVS encryption enablement.
+- Add CI checks that release artifacts are produced with required security flags and without development debug/test leakage.
+
+### 4.4 Testing baseline (unit + mocks) — decided on 2026-02-17
+
+Decision:
+- Use **ESP-IDF Unity on-target tests** as the baseline test runner.
+- Implement **mock-based unit tests** as the unit-testing layer for logic modules.
+- Treat **HiL** testing as a planned next layer, not a current delivery gate.
+
+Implementation guidance:
+- Define hardware seams (HAL/interfaces) so modules can be tested with host-side mocks.
+- Add notes in setup and phase plans to reassess HiL automation at each development stage.
+
+### 4.4.1 Mock test stack and layout contract — decided on 2026-02-17
+
+Decision:
+- Use **Unity** for on-target unit tests and **CMock** (via ESP-IDF `idf_component_mock`) for mock-based tests.
+- Do not add a second test framework in Phase 1.
+- Apply Option 2 build-profile execution intent:
+  - `dev`: targeted local unit/mock runs.
+  - `ci-test`: deterministic unit+mock test gate.
+  - `ci-secure`: release-equivalent secure-profile validation gate.
+  - `release`: no test/mock harness enabled by default.
+- Use test directory layout contract:
+  - `firmware/components/<module>/include`
+  - `firmware/components/<module>/src`
+  - `firmware/components/<module>/test`
+  - `firmware/components/<module>/test/mocks`
+  - `firmware/tests/common`
+- Use naming contract:
+  - Test source files: `test_<module>_<feature>.c`
+  - Test case names: `test_<module>__<condition>__<expected>`
+  - Mock config files: `mock_<module>.yaml`
+  - Script entrypoints: `tools/test_unit.sh`, `tools/test_mock.sh`, `tools/test_secure_smoke.sh`
+- Mock boundary contract: mock hardware/OS boundary dependencies (GPIO, UART, I2C, ADC, time, storage, modem transport edges) while keeping core logic under test real.
+
+Implementation notes:
+- Ensure local and CI both execute through the same test scripts to prevent workflow drift.
+- Produce stable JUnit artifacts under `artifacts/` for unit and mock jobs and keep traceability mappings aligned.
+- Require per-change unit+mock coverage updates (or waiver metadata) per `docs/CODEX_RULES.md`.
+
+### 4.5 Codex guardrails — decided on 2026-02-17
+
+Decision:
+- Add `docs/CODEX_RULES.md` as the active Codex policy file.
+- Enforce behavior-preserving migration rules (hard invariants vs migration-allowed internals).
+- Enforce mandatory unit + mock testing for new/changed behavior and HiL-ready abstraction seams.
+- Enforce coding standards, lint/format consistency, and layout discipline for touched code.
+
+Implementation notes:
+- `docs/CODEX_RULES.md` now defines mandatory execution, testing, security, and traceability rules for Codex changes.
+- Any temporary gap in tests requires explicit waiver metadata (reason, owner, due date, tracking item).
+
+### 4.6 Release log and debug channel policy — decided on 2026-02-17
+
+Decision:
+- Factory-programmed `release` devices must have serial debug locked down (no operational debug console/stream over serial).
+- Runtime debug channels are default-off in the `release` profile.
+- Runtime debug enablement must be policy-gated through authenticated web server controls (role-gated + feature-flagged), not open by default.
+- Debug output controls must be runtime-switchable by functional domain/category with safe defaults set to off.
+- Web debug UX must support terminal-style viewing and local capture/export.
+- Optional secure upstream log streaming (for example to an AWS endpoint) is allowed only as a feature-flagged capability and remains default-off in `release`.
+- All debug paths must enforce no-secret logging/redaction policy.
+
+Implementation notes:
+- This is a policy-level decision; implementation wiring remains a scaffolding task.
+- `release-policy-check` must fail artifacts that leak development debug/test settings or violate release default-off requirements.
+- Keep Phase 5 debug UX implementation aligned with auth, rate-limit, and non-blocking constraints.
+
+Testing impact:
+- Add CI checks proving `release` artifacts keep runtime debug channels default-off and serial debug locked down.
+- Add integration tests for authenticated/role-gated web debug enablement and category-level filtering.
+- Add negative tests for unauthenticated debug access and secret leakage in debug outputs.
+
+### 4.7 Technical scaffolding plan — ready to execute
+
+All Section 4 clarifications are now decided.
+
+Implement technical scaffolding for 4.1-4.4 and 4.6 (including 4.4.1) in one pass:
+- 4.1: add GitHub Actions workflow scaffolding using submodule checkout.
+- 4.2: add serial-first workflow scaffolding (documented commands/scripts for flash + monitor).
+- 4.3: add partition and filesystem-image build scaffolding for web assets.
+- 4.4: add Unity + mock unit-test scaffolding and initial test execution wiring in CI.
+- 4.4.1: add the agreed test directory layout, naming conventions, and script entrypoints wired to local + CI workflows.
+- TODO: implement Option 2 profile wiring for `dev`, `ci-test`, `ci-secure`, and `release`.
+- TODO: ensure `ci-test` enables test harness + mock injection while `ci-secure`/`release` keep them disabled by default.
+- TODO: add serial debug stream controls tied to build profiles (`dev`/`ci-test` verbose; `ci-secure`/`release` minimal/default-off), including CI verification that release artifacts do not enable development debug flags.
+- TODO: implement release debug policy scaffolding (serial locked down in `release`; web runtime debug controls role-gated/authenticated/feature-flagged; default-off release config; optional secure upstream streaming kept disabled unless explicitly enabled).
+- TODO: implement Option 2 required merge checks and branch protection policy (`build-firmware`, `unit-tests`, `mock-tests`, `lint-format`, `ci-secure`, `release-policy-check`) with stable job naming.
