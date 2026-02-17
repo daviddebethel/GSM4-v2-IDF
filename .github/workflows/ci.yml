@@ -1,0 +1,146 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-firmware:
+    name: build-firmware
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout (with submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Cache ESP-IDF tools
+        uses: actions/cache@v4
+        with:
+          path: ~/.espressif
+          key: esp-idf-tools-${{ runner.os }}-${{ hashFiles('firmware/IDF_VERSION', 'third_party/esp-idf/tools/tools.json') }}
+
+      - name: Install ESP-IDF tools
+        run: ./third_party/esp-idf/install.sh esp32
+
+      - name: Build dev profile
+        run: ./tools/build_firmware.sh --profile dev reconfigure build
+
+  unit-tests:
+    name: unit-tests
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout (with submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Cache ESP-IDF tools
+        uses: actions/cache@v4
+        with:
+          path: ~/.espressif
+          key: esp-idf-tools-${{ runner.os }}-${{ hashFiles('firmware/IDF_VERSION', 'third_party/esp-idf/tools/tools.json') }}
+
+      - name: Install ESP-IDF tools
+        run: ./third_party/esp-idf/install.sh esp32
+
+      - name: Run unit test foundation
+        env:
+          ARTIFACTS_DIR: ${{ runner.temp }}/artifacts
+        run: ./tools/test_unit.sh
+
+      - name: Upload unit test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-tests-artifacts
+          path: ${{ runner.temp }}/artifacts/unit-tests.junit.xml
+          if-no-files-found: error
+
+  mock-tests:
+    name: mock-tests
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout (with submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Cache ESP-IDF tools
+        uses: actions/cache@v4
+        with:
+          path: ~/.espressif
+          key: esp-idf-tools-${{ runner.os }}-${{ hashFiles('firmware/IDF_VERSION', 'third_party/esp-idf/tools/tools.json') }}
+
+      - name: Install ESP-IDF tools
+        run: ./third_party/esp-idf/install.sh esp32
+
+      - name: Run mock test foundation
+        env:
+          ARTIFACTS_DIR: ${{ runner.temp }}/artifacts
+        run: ./tools/test_mock.sh
+
+      - name: Upload mock test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mock-tests-artifacts
+          path: ${{ runner.temp }}/artifacts/mock-tests.junit.xml
+          if-no-files-found: error
+
+  ci-secure:
+    name: ci-secure
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout (with submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Cache ESP-IDF tools
+        uses: actions/cache@v4
+        with:
+          path: ~/.espressif
+          key: esp-idf-tools-${{ runner.os }}-${{ hashFiles('firmware/IDF_VERSION', 'third_party/esp-idf/tools/tools.json') }}
+
+      - name: Install ESP-IDF tools
+        run: ./third_party/esp-idf/install.sh esp32
+
+      - name: Run ci-secure profile smoke build
+        run: ./tools/test_secure_smoke.sh
+
+  release-policy-check:
+    name: release-policy-check
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout (with submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Cache ESP-IDF tools
+        uses: actions/cache@v4
+        with:
+          path: ~/.espressif
+          key: esp-idf-tools-${{ runner.os }}-${{ hashFiles('firmware/IDF_VERSION', 'third_party/esp-idf/tools/tools.json') }}
+
+      - name: Install ESP-IDF tools
+        run: ./third_party/esp-idf/install.sh esp32
+
+      - name: Build release profile
+        run: ./tools/build_firmware.sh --profile release reconfigure
+
+      - name: Enforce release flag policy
+        run: ./tools/check_release_policy.sh

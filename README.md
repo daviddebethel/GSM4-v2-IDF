@@ -63,13 +63,15 @@ Phase 1 CI decision:
 - Build-profile contract uses Option 2: `dev`, `ci-test`, `ci-secure`, `release`.
 
 Scaffolding status:
-- Section 4 clarifications are finalized. CI workflow files and test scaffolding are the next implementation step.
+- CI foundation is implemented in `.github/workflows/ci.yml` with submodule checkout and profile-aware job commands.
+- Unit/mock jobs currently publish foundation JUnit artifacts while full test suites are being scaffolded.
 
-Expected minimum jobs once workflows are added:
+Current CI jobs:
 - firmware build
 - unit tests
-- mock tests (where applicable)
+- mock tests
 - `ci-secure` release-equivalent security validation build
+- `release-policy-check`
 
 Required PR merge checks (Option 2 Balanced Gate):
 - `build-firmware`

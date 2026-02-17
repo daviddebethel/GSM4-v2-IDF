@@ -534,13 +534,15 @@ Testing impact:
 All Section 4 clarifications are now decided.
 
 Implement technical scaffolding for 4.1-4.4 and 4.6 (including 4.4.1) in one pass:
-- 4.1: add GitHub Actions workflow scaffolding using submodule checkout.
+- DONE: 4.1 GitHub Actions workflow scaffolding is in place with submodule checkout in `.github/workflows/ci.yml`.
 - 4.2: add serial-first workflow scaffolding (documented commands/scripts for flash + monitor).
 - 4.3: add partition and filesystem-image build scaffolding for web assets.
-- 4.4: add Unity + mock unit-test scaffolding and initial test execution wiring in CI.
-- 4.4.1: add the agreed test directory layout, naming conventions, and script entrypoints wired to local + CI workflows.
+- DONE: 4.4 initial CI test execution wiring exists via `unit-tests` and `mock-tests` jobs (foundation JUnit output + profile build validation).
+- DONE: 4.4.1 script entrypoints are wired (`tools/test_unit.sh`, `tools/test_mock.sh`, `tools/test_secure_smoke.sh`) with local/CI parity.
 - DONE: Option 2 build-profile foundation is in place (`dev`, `ci-test`, `ci-secure`, `release`) via `main/Kconfig.projbuild`, `firmware/sdkconfig.defaults*`, and profile-aware `tools/build_firmware.sh`.
 - DONE: test harness default contract is wired (`ci-test` enabled by defaults; `ci-secure`/`release` disabled by defaults).
 - DONE: serial debug flag gating foundation is wired (`dev`/`ci-test` enabled by defaults; `ci-secure`/`release` default-off) with baseline release validation in `tools/check_release_policy.sh`.
+- DONE: release profile guard job is wired (`release-policy-check` runs `tools/check_release_policy.sh`).
 - TODO: implement release debug policy scaffolding (serial locked down in `release`; web runtime debug controls role-gated/authenticated/feature-flagged; default-off release config; optional secure upstream streaming kept disabled unless explicitly enabled).
-- TODO: implement Option 2 required merge checks and branch protection policy (`build-firmware`, `unit-tests`, `mock-tests`, `lint-format`, `ci-secure`, `release-policy-check`) with stable job naming.
+- TODO: add `lint-format` CI job and then enforce full Option 2 branch protection required checks (`build-firmware`, `unit-tests`, `mock-tests`, `lint-format`, `ci-secure`, `release-policy-check`) with stable job naming.
+- TODO: replace foundation unit/mock JUnit placeholders with real Unity/CMock suite execution and artifacts.
