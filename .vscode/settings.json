@@ -1,6 +1,6 @@
 {
   "idf.espIdfPath": "${workspaceFolder}/third_party/esp-idf",
-  "idf.currentSetup": "${workspaceFolder}/third_party/esp-idf",
+  "idf.currentSetup": "/Users/david/Code/Git/GSM4-v2-IDF-1/third_party/esp-idf",
   "idf.toolsPath": "${env:HOME}/.espressif",
   "idf.customExtraVars": {
     "IDF_TOOLS_PATH": "${env:HOME}/.espressif"
