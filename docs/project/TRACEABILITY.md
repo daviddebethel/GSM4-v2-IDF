@@ -55,11 +55,13 @@ Use these module codes:
 
 | Req | Module | Gate ID | Acceptance gate (WHEN/THEN) | QASE Case ID(s) | CI workflow/job | Test type | Evidence artefact |
 |---|---|---|---|---|---|---|---|
-| R1 | TMB | GATE-TMB-01 | WHEN <trigger>, THEN <outcome>. | QASE- | ci.yml / unit-tests | unit | artifacts/junit.xml |
-| R1 | CFG | GATE-CFG-01 | WHEN <trigger>, THEN <outcome>. | QASE- | ci.yml / unit-tests | unit | artifacts/junit.xml |
-| R1 | WEB | GATE-WEB-01 | WHEN <trigger>, THEN <outcome>. | QASE- | ci.yml / integration-tests | integration | artifacts/junit.xml |
-| R2 | ALL | GATE-TEST-01 | WHEN tests run, THEN results are produced as JUnit. | QASE- | ci.yml / unit-tests | unit | artifacts/junit.xml |
-| R3 | ALL | GATE-CI-01 | WHEN PR opened, THEN build+tests run automatically. | (n/a) | GitHub branch rules | policy | GitHub settings |
+| R1 | ALL | GATE-R1-BUILD-01 | WHEN firmware baseline is validated, THEN the dev profile build completes without manual intervention. | QASE- | ci.yml / build-firmware | build | GitHub Actions workflow logs |
+| R2 | ALL | GATE-TEST-UNIT-01 | WHEN unit tests run, THEN Unity host tests pass and JUnit evidence is produced. | QASE- | ci.yml / unit-tests | unit | artifacts/unit-tests.junit.xml; artifacts/unit-tests.host.log |
+| R2 | ALL | GATE-TEST-MOCK-01 | WHEN mock tests run, THEN Unity+CMock host tests pass and JUnit evidence is produced. | QASE- | ci.yml / mock-tests | mock | artifacts/mock-tests.junit.xml; artifacts/mock-tests.host.log |
+| R3 | ALL | GATE-CI-PR-01 | WHEN a PR is opened or updated, THEN build/test jobs run automatically. | (n/a) | ci.yml / build-firmware | policy | GitHub Actions run summary |
+| R3 | ALL | GATE-CI-SECURE-01 | WHEN ci-secure runs, THEN a release-equivalent secure profile build is executed. | QASE- | ci.yml / ci-secure | secure-smoke | GitHub Actions workflow logs |
+| R3 | ALL | GATE-CI-REL-01 | WHEN release-policy-check runs, THEN release flag policy is validated. | QASE- | ci.yml / release-policy-check | policy | GitHub Actions workflow logs |
+| R3 | ALL | GATE-CI-MERGE-01 | WHEN required checks or approvals are missing, THEN merge is blocked. | (n/a) | GitHub branch protection rules | policy | GitHub repository settings |
 
 Notes:
 - “Acceptance gate” should be copied verbatim from `docs/tests/ACCEPTANCE_INVARIANTS.md`.
@@ -87,7 +89,9 @@ Tag test cases:
 ## CI artefacts (recommended)
 
 Standardise on:
-- `artifacts/junit.xml` for unit + mock tests
+- `artifacts/unit-tests.junit.xml` for unit test JUnit output
+- `artifacts/mock-tests.junit.xml` for mock test JUnit output
+- `artifacts/unit-tests.host.log` and `artifacts/mock-tests.host.log` for host test logs
 - `artifacts/build.log` for build output
 - Optional: `artifacts/firmware.bin` for tagged releases
 
@@ -118,3 +122,4 @@ Add rows for:
 
 ## Change log
 - YYYY-MM-DD: Created traceability file for GSM4-v2-IDF rewrite.
+- 2026-02-17: Replaced placeholder matrix rows with active CI jobs and real unit/mock artifact paths.
