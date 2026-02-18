@@ -1,6 +1,7 @@
 idf_component_register(
     SRCS "main.c"
     INCLUDE_DIRS "."
+    REQUIRES bsp_gsm4_rev4
 )
 
 set(GSM4_WEB_DIST_DIR "${CMAKE_CURRENT_LIST_DIR}/../../web/dist")
