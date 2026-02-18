@@ -7,7 +7,7 @@ REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 assert_has() {
     local pattern="$1"
     local file="$2"
-    if ! rg -q "^${pattern}$" "${file}"; then
+    if ! grep -Fqx -- "${pattern}" "${file}"; then
         echo "ERROR: Missing required setting '${pattern}' in ${file}" >&2
         exit 1
     fi
@@ -16,7 +16,7 @@ assert_has() {
 assert_absent() {
     local pattern="$1"
     local file="$2"
-    if rg -q "^${pattern}$" "${file}"; then
+    if grep -Fqx -- "${pattern}" "${file}"; then
         echo "ERROR: Forbidden release setting '${pattern}' found in ${file}" >&2
         exit 1
     fi
