@@ -49,6 +49,13 @@ config GSM4_RUNTIME_DEBUG_WEB_DEFAULT_ON
     help
         Policy default for runtime web debug channels. Release requires default-off.
 
+config GSM4_PHASE0_TELEMETRY
+    bool "Enable Phase 0 telemetry loop (1 Hz)"
+    default n
+    help
+        Emits 1 Hz Phase 0 bring-up telemetry for charger and interrupt lines.
+        Keep disabled in release-safe profiles unless explicitly required.
+
 config GSM4_RELEASE_SAFE_DEFAULTS
     bool
     default y if GSM4_BUILD_PROFILE_CI_SECURE || GSM4_BUILD_PROFILE_RELEASE
