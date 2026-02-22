@@ -4,3 +4,7 @@ artifacts/
 firmware/tests/host/**/build/
 firmware/tests/host/**/sdkconfig
 firmware/tests/host/**/sdkconfig.old
+
+# macOS metadata
+.DS_Store
+**/.DS_Store
