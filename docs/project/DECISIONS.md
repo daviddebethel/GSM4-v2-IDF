@@ -1,7 +1,7 @@
 # Decisions (GSM4 v2 IDF rewrite)
 
 **Monorepo:** `https://github.com/daviddebethel/GSM4-v2-IDF.git`
-**Last updated:** 2026-02-17
+**Last updated:** 2026-02-22
 
 This file is a lightweight decision log (ADR-style).
 It exists to capture the “why” behind choices so we do not re-litigate them later, and so GPT Codex stays aligned.
@@ -190,6 +190,22 @@ Append a new section using this template:
 - **Options considered:** No explicit codex rules file; advisory-only guidance; mandatory enforceable rules file.
 - **Consequences:** More consistent and auditable AI-assisted changes; stricter delivery discipline; occasional short-term overhead from required tests/documentation updates.
 - **Links:** `docs/CODEX_RULES.md`, `docs/setup guides/ESP_IDF_SETUP_GUIDE.md`, `docs/tests/ACCEPTANCE_INVARIANTS.md`, `README.md`
+
+---
+
+### ADR-20260222-phase0-bringup-baseline
+- **Status:** Accepted
+- **Context:** Phase 0 required deterministic, board-safe bring-up on pure ESP-IDF with strict pin authority from `board_pins.h`, minimal BSP orchestration, mockable hardware boundaries, and mandatory unit/mock validation.
+- **Decision:** Implement Phase 0 as a dedicated BSP-driven boot sequence with a new mockable `i2c_bus` abstraction and minimal KTS1622/BQ25622 drivers; keep `main` thin (`bsp_init()` only), add compile-time-gated telemetry (`CONFIG_GSM4_PHASE0_TELEMETRY`), enforce secret-safe logging, and add both component-local and host unit/mock tests with a fake in-memory I2C bus.
+- **Options considered:**
+  - Keep direct IDF I2C usage in each driver/service.
+  - Introduce mockable bus boundary now and keep driver APIs minimal.
+- **Consequences:**
+  - Deterministic Phase 0 bring-up is now executable and testable with clear ownership boundaries.
+  - Hardware drivers are host-testable without ESP32 hardware.
+  - Existing test scripts (`tools/test_unit.sh`, `tools/test_mock.sh`) now exercise Phase 0 logic.
+  - A small follow-up is still needed to tighten one log-line token (`source=<expander-pin>`) to exact proposal text if strict literal matching is required.
+- **Links:** `docs/bringup/phase0_proposal.md`, `docs/bringup/phase0_bench_checklist.md`, `firmware/components/bsp_gsm4_rev4/include/bsp.h`, `firmware/components/i2c_bus/include/i2c_bus.h`, `firmware/components/drv_kts1622/include/drv_kts1622.h`, `firmware/components/drv_bq25622/include/drv_bq25622.h`
 
 ---
 
